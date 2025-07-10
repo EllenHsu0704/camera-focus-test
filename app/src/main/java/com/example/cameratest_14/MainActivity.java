@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(Configuration.TAG, "[]+設立介面" );
         setTitle("CameraTest_1.4.1");
 
        
@@ -106,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
     private void takePhoto() {
         // 確保imageCapture 已經被實例化, 否则程序將可能崩溃
         startTime = System.currentTimeMillis();
-        Log.d(Configuration.TAG, "[]+成像實例化+放置計時器" );
         // Create output file to hold the image
         fileName = System.currentTimeMillis() + ".jpg";
         if (imageCapture != null) {
@@ -118,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                 contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image");
-                Log.d(Configuration.TAG, "[]+建立儲存位置" );
             }
 
             // 創建 output option 對象，用以指定照片的输出方式。
@@ -128,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     contentValues)
                     .build();
-            Log.d(Configuration.TAG, "[]+建立輸出" );
 
 
             // 設置拍照监听，用以在照片拍摄後執行takePicture方法
@@ -138,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                             long timeTaken = System.currentTimeMillis() - startTime;//設置結束時間
-                            Log.d(Configuration.TAG, "[]+結束計時" );
+                            Log.d(Configuration.TAG, "結束計時" );
                             String msg = "照片拍攝成功! " + "----" + timeTaken + "ms";//outputFileResults.getSavedUri();
                             String msg3 = timeTaken + "ms";
                             Toast.makeText(getBaseContext(), msg , Toast.LENGTH_SHORT).show();
@@ -193,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 Preview preview = new Preview.Builder()
                         .build();
                 preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
-                Log.d(Configuration.TAG, "[]+創建Preview" );
+                Log.d(Configuration.TAG, "創建Preview" );
 
                 // 選擇後置鏡頭為默認鏡頭
                 CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
@@ -217,7 +213,6 @@ public class MainActivity extends AppCompatActivity {
                 .setTargetResolution(new Size(4608, 3456))  //設置相片尺寸
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build();
-                Log.d(Configuration.TAG, "[]+設置預覽幀分析" );
 
                 imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
                     @Override
@@ -258,18 +253,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d(Configuration.TAG, "[]+動態申請權限" );
         if (requestCode == Configuration.REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {// 申请權限通過
                 startCamera();
             } else {// 申请權限失敗
-                Toast.makeText(this, "用戶拒绝授權！", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "使用者拒绝授權！", Toast.LENGTH_LONG).show();
                 finish();
             }
         } else if (requestCode == Configuration.REQUEST_AUDIO_CODE_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(this,
                     "Manifest.permission.RECORD_AUDIO") != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "用戶未授權！", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "使用者未授權！", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -295,7 +289,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static class MyAnalyzer implements ImageAnalysis.Analyzer{
-
         @SuppressLint("UnsafeOptInUsageError")
         @Override
         public void analyze(@NonNull ImageProxy image) {
