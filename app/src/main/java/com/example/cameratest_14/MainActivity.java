@@ -3,9 +3,6 @@ package com.example.cameratest_14;
 1.4.1由原先的基礎上加入閃光燈及TextView，是參考CameraX_2.0完成
 原本是要跟2.0版本有所區隔，但最終發現由此程式測試拍照速度，會比2.0版本快上100~200左右毫秒
 所以為了求基準一致起見，便將2.0的新增項目及功能搬過來
-兩者拍照速度上的差異原因，目前還不清楚
-2.0使用計算時間的方法是System.nanoTime(); //納秒的計算，精度更高，但在2.0之中2種算法經測試差距不大，所以這個版本就保留了原本的System.currentTimeMillis()
-此外，兩者都是使用CameraX的寫法，為了配合之前測試結果，所以統一還是以此方式計時
  */
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -59,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding viewBinding;
     private ImageCapture imageCapture = null;
-    //private VideoCapture<Recorder> videoCapture = null;
-    //private Recording recording = null;
     private ExecutorService cameraExecutor;
     private String fileName;
     long startTime;
@@ -71,15 +66,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(Configuration.TAG, "[]+設立介面" );
         setTitle("CameraTest_1.4.1");
-        //viewBinding = ActivityMainBinding.inflate(getLayoutInflater());
-        //setContentView(viewBinding.getRoot());
 
        
         // 請求相機權限
@@ -95,15 +87,12 @@ public class MainActivity extends AppCompatActivity {
         clearButton = findViewById(R.id.clearButton);
         btn_flash = findViewById(R.id.btn_flash);
         captureButton = findViewById(R.id.imageCaptureButton);
-        //viewBinding.imageCaptureButton.setOnClickListener(v -> takePhoto());
-        //viewBinding.videoCaptureButton.setOnClickListener(v -> captureVideo());
         captureButton.setOnClickListener(v -> takePhoto());
         btn_flash.setOnClickListener(v -> takeFlash());
 
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 清除TextView的文字
                 textview.setText("");
             }
         });
@@ -116,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void takePhoto() {
         // 確保imageCapture 已經被實例化, 否则程序將可能崩溃
-        // Calculate the time taken for the photo
         startTime = System.currentTimeMillis();
         Log.d(Configuration.TAG, "[]+成像實例化+放置計時器" );
         // Create output file to hold the image
@@ -143,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(Configuration.TAG, "[]+建立輸出" );
 
 
-            // 設置拍照监听，用以在照片拍摄後執行takePicture（拍照）方法
+            // 設置拍照监听，用以在照片拍摄後執行takePicture方法
             imageCapture.takePicture(outputFileOptions,
                     ContextCompat.getMainExecutor(this),
                     new ImageCapture.OnImageSavedCallback() {// 保存照片时的回调
@@ -164,9 +152,7 @@ public class MainActivity extends AppCompatActivity {
                                     textview.setText(newText);
                                 }
                             });
-
                             Log.d(Configuration.TAG, msg );
-
                         }
 
                         @Override
@@ -250,7 +236,6 @@ public class MainActivity extends AppCompatActivity {
                         preview,
                         imageCapture,
                         imageAnalysis
-                        //videoCapture
                 );
 
             } catch (Exception e) {
